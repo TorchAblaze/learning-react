@@ -7,10 +7,7 @@
   </head>
 
   <body>
-    <!-- Step 2 Start: -->
-    <div id="root">Loading...</div>
-    <!-- All we need to do here, the react code in app.js will be rendered into this root div (in React terms, this is where we will be mounting our React application). Any text inside the root div will be replaced when render is first called. After the root div is added, our h1 heading will appear on the website, and the h1 created with React.createElement() will appear in the Elements tab in Chrome dev tools with the id and title attributes -->
-    <!-- Step 2 end -->
+    <div id="root"></div>
     <script
       crossorigin
       src="https://unpkg.com/react@16/umd/react.development.js"
@@ -19,6 +16,10 @@
       crossorigin
       src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
     ></script>
-    <script src="./app.js"></script>
+    <!-- Note: babel is added to compile JSX -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel" src="./app.js"></script>
+    <h6>How Babel compiles JSX:</h6>
+    <img src="BabelJSX.png" alt="Babel compiling JSX code" />
   </body>
 </html>
