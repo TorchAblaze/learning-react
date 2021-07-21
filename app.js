@@ -8,6 +8,8 @@
 
 // React components are required to begin with an upper case letter
 // Header is going to return react elements describing what should appear on the screen using JSX
+
+// Step 1:
 function Header() {
   return (
     <header>
@@ -18,3 +20,4 @@ function Header() {
 }
 
 ReactDOM.render(header, document.getElementById("root"));
+// Step 1 end
