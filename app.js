@@ -1,13 +1,27 @@
-function Header() {
+// HTML elements accept attributes that give them further meaning and additional behavior (ex. element id, class name, or img alt text)
+// Every React component and element can receive a list of attributes just like HTML elements, this list is called properties, or "props"
+// Props: A list of properties used to pass data to a component. Components are customized and made reusable with props.
+// There are two main steps to using props in a component:
+// 1. Write/define the props in a component's JSX tag using an attribute syntax
+// 2. Enable the use of props in a component
+
+// Every React element and component has a props object containing the list of props given to it
+
+// Step 2:
+// When you define a component using a function, the function gets one default argument from React, a props object containing a list of props given to the component
+// We'll enable the use of props in the Header component by giving the function a parameter called props:
+function Header(props) {
+  console.log(props); // (dispalys the title and totalPlayers props that we made in the Header JSX tag in the App component in Step 1)
+  // We'll want to place these prop values into our h1 and span JSX tags -- we can do this with dot notation
   return (
     <header>
-      <h1>Scoreboard</h1>
-      <span className="stats">Players: 1</span>
+      <h1>{props.title}</h1>{" "}
+      {/* We replace the word "Scoreboard" with props.title inside a JSX expression (curly braces {}) above and replace 1 with props.totalPlayers() below */}
+      <span className="stats">Players: {props.totalPlayers(5)}</span>
     </header>
   );
 }
 
-// React components can make use of, or refer, to other React components (for example, you can render the Counter component within the Player component return statement, as seen below), this is called composition
 const Player = () => {
   return (
     <div className="player">
@@ -28,22 +42,20 @@ const Counter = () => {
   );
 };
 
-// Typically, React applications have a single top level component that wraps the entire application and composes all the main components together:
+// Step 1:
+// You pass props to a component via the component's JSX tag at the place where it's used
+// The Header tag is used in the app component, so this is where we'd go to add props to Header
 const App = () => {
   return (
     <div className="scoreboard">
-      <Header />
-
+      <Header title="Scoreboard" totalPlayers={(n) => n + 10} />{" "}
+      {/* We've added the title and totalPlayers(could be named anything) props to the Header JSX tag */}
+      {/* Note: Anytime you pass a prop other than a string, like a number or a variable, you should place it between curly braces so that it gets evaluated as a JSX expression */}
       {/* Players list */}
+      {/* Step 1 end */}
       <Player />
     </div>
   );
 };
 
-// ReactDOM.render usually renders your top level element into the DOM, so we're going to pass our App component in the function using the JSX tag
 ReactDOM.render(<App />, document.getElementById("root"));
-// Our entire application is now mounted into the DOM
-
-// Remember, React never allows us to touch the actual DOM directly
-// React just mangages what gets rendered into the DOM and what should appear on the screen ~ this makes it tricky to debug things in the browser
-// ^ (Oh, so that's why those errors are so freaking vague)
