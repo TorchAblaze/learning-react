@@ -59,3 +59,35 @@ const App = () => {
 };
 
 ReactDOM.render(<App />, document.getElementById("root"));
+
+// Components and Props Notes:
+// Props are "read only" or immutable --> a component can only read the props given to it, never change them. The (parent) component higher in the tree owns and controls the property values.
+// Example: This will throw the error: cannot assign to read only property 'title' of object:
+// const Header = (props) => {
+//   return (
+//     <header>
+//       <h1>{(props.title = "Fun Board")}</h1>
+//     </header>
+//   );
+// };
+
+// All React components must act like pure functions with respect to their props. They do not attempt to change their inputs, and always return the same result for the same inputs.
+
+// Prop Tips
+// When a component has more than one prop, you'll often see them written on separate lines and indented, like so:
+{
+  /* <Header
+  title="My Scoreboard"
+  totalPlayers={5}
+  isFun={true}
+/> */
+}
+// You can omit the value of a prop when it's explicitly true:
+{
+  /* <Header
+  title="My Scoreboard"
+  totalPlayers={5}
+  isFun
+/> */
+}
+// Use double quotes when writing props. HTML attributes commonly use double quotes instead of single, so props mirror this convention.
