@@ -2,7 +2,7 @@
 
 ## Description
 
-A very basic react web application to reinfore my react skills. Scoreboard is a website that displays player names and their scores. Scores can be incremented and decremented via the "+" and "-" buttons. There are multiple branches with notes commented out to explain the code and the steps that were taken to build this application. If you'd like to follow along, the branches are in this order:
+A very basic react web application to reinforce my react skills. Scoreboard is a website that displays player names and their scores. Scores can be incremented and decremented via the "+" and "-" buttons. There are multiple branches with notes commented out to explain the code and the steps that were taken to build this application. If you'd like to follow along, the branches are in this order:
 
 1. main
 2. JSX
