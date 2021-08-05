@@ -11,5 +11,7 @@ A very basic react web application to reinforce my react skills. Scoreboard is a
 5. props
 6. reusable-components
 7. map
+8. key
+9. state
 
 Feel free to reach out if you have any questions.
