@@ -1,20 +1,28 @@
-// Step 1: Create a players array of objects to iterate over
+// In most apps, you'll have a list of sibling elements that get updated, removed, added and reordered on the page.
+// Key - a unique identifier that gives React a way to quickly and reliably identify an element in the list
+// React does not recommend using index for unique keys, because the index might not always uniquely identify elements. It's usually best to use a unique id.
+
+// Step 1: Add an id property for each player
 const players = [
   {
     name: "Tiffany",
     score: 50,
+    id: 1,
   },
   {
     name: "Treasure",
     score: 85,
+    id: 2,
   },
   {
     name: "Ashley",
     score: 90,
+    id: 3,
   },
   {
     name: "James",
     score: 80,
+    id: 4,
   },
 ];
 // Step 1 end
@@ -48,24 +56,29 @@ const Counter = (props) => {
   );
 };
 
-// Step 3: To use these props inside the App funtion, we need to pass it the parameter for "props"
+// Step 2: Pass Player a new Key prop
+// The React docs recommend using a string as the key value, so use the toString() method to convert the id value to a string
 const App = (props) => {
   return (
     <div className="scoreboard">
       <Header title="Scoreboard" totalPlayers={props.initialPlayers.length} />
-      {/* map over the players array to return a player component for each object in the array */}
       {props.initialPlayers.map((player) => (
-        <Player name={player.name} score={player.score} />
+        <Player
+          name={player.name}
+          score={player.score}
+          key={player.id.toString()}
+        />
       ))}
     </div>
   );
 };
-// Step 3 end
+// Step 2 end
 
-// Step 2: To get the players data into the application, the players array needs to be passed down as props to the main App component
-// To do this, add a prop name of initialPlayers to the App tag and pass it the players array
 ReactDOM.render(
   <App initialPlayers={players} />,
   document.getElementById("root")
 );
-// Step 2 end
+
+// Not all React elements need a key prop
+// Pass a key prop anytime you're creating elements by iterating over an array of items that will be rearranged, added or deleted in your UI
+// The key will help React identify which items were changed, added or removed from the DOM.
