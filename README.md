@@ -13,5 +13,6 @@ A very basic react web application to reinforce my react skills. Scoreboard is a
 7. map
 8. key
 9. state
+10. events
 
 Feel free to reach out if you have any questions.
