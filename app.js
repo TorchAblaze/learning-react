@@ -1,18 +1,4 @@
-// There are two ways that data gets handled in react: props and state.
-// Props are read-only or immutable.
-// State is used to store information about a component that can change over time. For any data that's going to change, we have to use state.
-// State is the data you want to track in your app.
-// State is what allows you to create components that are dynamic and interactive, and it's the only data that changes over time.
-// When a user removes data, adds data, or even types into the text field, they are changing the state of the application, and all those changes need to be stored somewhere.
-// In react, this data is stored in state.
-// State itself is a regular JavaScript object with properties that define the pieces of data that change.
-// State is what keeps your UI in sync with your data.
-// As the data changes, different components of the app will update what they show to the user.
-// Data from state is distributed through props
-// Props are still how you get data into a component
-// State is only available to components that are class components
-// So far we've been defining components using stateless functional components (see previous branches)
-// Class components offer a more powerful way to build components becuase they're the only type of components that let you use state.
+// State is local to a component -- a component can maintain its own state, unlike props, which are read-only.
 
 const players = [
   {
@@ -47,7 +33,6 @@ function Header(props) {
   );
 }
 
-// Step 2 Part 1: Remove the score prop being passed to the Counter and player components, since Counter is now maintaining its own score state.
 const Player = (props) => {
   return (
     <div className="player">
@@ -56,45 +41,57 @@ const Player = (props) => {
     </div>
   );
 };
-// Step 2 Part 1 end
 
-// Step 1
-// In JavaScript classes, the extends keyword is used to create a subclass, or a child of another class.
-// In this case, we're extending from React.Component which is part of React's API for component class definition.
-// The only method you need to define in a class componenet is called render.
-// Classes need to access props with this.props
-// In class components, props are not accessed through arguments like they are in functional components. Props are a property of the component itself. "this" refers to the component instance.
-// In the Counter class component, score is our state (it's what changes)
-// Since state is an object, you create and initalize state within a class inside the constructor method.
-// The object name must be state otherwise the constructor method won't work
 class Counter extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      score: 0,
-    };
-  }
-  // The Counter class can also be written like this:
-  // class Counter extends React.Component {
-  //   state = {
-  //     score: 0
-  //   };
+  state = {
+    score: 0,
+  };
 
-  // Step 3: Replace this.props.score with this.state.score
+  // We create a function or event handler that updates our state using React's built-in set state method.
+  // Then we give the buttons an onClick event that calls the event handler when clicked.
+  // Whenever the score state gets updated, React will re-render our component and the change will be visible in our UI.
+  // In class components, a common pattern is to create event handlers as a method on the class.
+
+  // Step 1 Part 1:
+  // It's important to remember that state is never modified directly. Example: We can't type "this.state.score += 1"
+  // The only way React allows you to update a component state is by using its built-in set state method.
+  // this.setState lets React know that state has changed and that it should re-render and make changes to the component based on the change in state.
+  // You pass setState an object that contains the part of the state you want to update and the value you want to update it to.
+  incrementScore() {
+    this.setState({
+      score: this.state.score + 1,
+    });
+  }
+  // Step 1 Part 1 end
+
+  // Now we need to instruct React to listen for the clik event on a button
+  // React events are similar to JS events except that they are written inline and named using camelCase.
+
+  // Step 1 Part 2
   render() {
     return (
       <div className="counter">
         <button className="counter-action decrement"> - </button>
         <span className="counter-score">{this.state.score}</span>
-        {/* Step 3 end */}
-        <button className="counter-action increment"> + </button>
+        <button
+          className="counter-action increment"
+          onClick={this.incrementScore}
+          // Notice we don't use () to call incrementScore -- we're only passing a reference to the method.
+          // Adding () will call incrementScore and make it run right when the component mounts, or gets displayed on the page, which we don't want. (We only want to call incrementScore when the button is clicked.)
+        >
+          {" "}
+          +{" "}
+        </button>
       </div>
     );
   }
 }
-// Step 1 end
+// Step 1 Part 2 end
 
-// Step 2 Part 2: Remove the score prop below
+// An error will appear in the console: "Cannot read property 'setState' of undefined"
+// It looks like the binding to the component was lost, so we're not able to reference it with "this" from within the incrementScore method.
+// This issue is fixed in the next branch: binding
+
 const App = (props) => {
   return (
     <div className="scoreboard">
@@ -105,14 +102,8 @@ const App = (props) => {
     </div>
   );
 };
-// Step 2 Part 2 end
 
 ReactDOM.render(
   <App initialPlayers={players} />,
   document.getElementById("root")
 );
-
-// If a component is only receiving input through props and rendering UI, it's best to use a function or a stateless functional component.
-//Functions are a little easier to write, read and understand, and you can think of a stateless functional component as just the render method from a class component with props passed in as an argument.
-// When you want to add state, that's when you use a class component.
-// You can also create stateless components as classes in case you ever need to convert the component from stateless to stateful
