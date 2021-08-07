@@ -15,5 +15,6 @@ A very basic react web application to reinforce my react skills. Scoreboard is a
 9. state
 10. events
 11. binding
+12. prevState
 
 Feel free to reach out if you have any questions.
