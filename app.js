@@ -1,26 +1,3 @@
-const players = [
-  {
-    name: "Tiffany",
-    score: 50,
-    id: 1,
-  },
-  {
-    name: "Treasure",
-    score: 85,
-    id: 2,
-  },
-  {
-    name: "Ashley",
-    score: 90,
-    id: 3,
-  },
-  {
-    name: "James",
-    score: 80,
-    id: 4,
-  },
-];
-
 function Header(props) {
   console.log(props);
   return (
@@ -45,31 +22,18 @@ class Counter extends React.Component {
     score: 0,
   };
 
-  // The way setState works is it takes the object passed to it with the updated state and eventually merges it into the component's current state.
-  // A state update may be asynchronous -- sometimes updates to the DOM don't happen immediately when you call this.setState.
-  // If you have multiple setState calls inside an event handler, React will often batch or bundle the updates together into a single update.
-  // This may not always lead to the component rerendering with the new data and could cause state inconsistency.
-  // Because state maybe updated asynchronously, whenever you need to update state based on previous state, you shouldn't rely on this.state to calculate the next state.
-  // Instead of an object, setState also accepts a call back function that produces state based on the previous state in a more reliable way.
-  // The call back funtion receives the previous state as its first argument and the props at the time the update is applied as an optional second argument.
-  // Step 1:
   incrementScore = () => {
-    this.setState((prevState) => {
-      return {
-        score: prevState.score + 1,
-      };
-    });
+    this.setState((prevState) => ({
+      score: prevState.score + 1,
+    }));
   };
 
   decrementScore = () => {
-    this.setState((prevState) => {
-      return {
-        score: this.state.score - 1,
-      };
-    });
+    this.setState((prevState) => ({
+      score: this.state.score - 1,
+    }));
   };
-  // Step 1 end
-  // The call back function is guaranteed to fire after the update is applied and rendered out to the DOM.
+
   render() {
     return (
       <div className="counter">
@@ -93,18 +57,48 @@ class Counter extends React.Component {
   }
 }
 
-const App = (props) => {
-  return (
-    <div className="scoreboard">
-      <Header title="Scoreboard" totalPlayers={props.initialPlayers.length} />
-      {props.initialPlayers.map((player) => (
-        <Player name={player.name} key={player.id.toString()} />
-      ))}
-    </div>
-  );
-};
+// Since the app component is responsible for rendering the player component, it's going to own and maintain the player state.
+// That state will then be passed down and available to the player component as well as all children of App via props.
 
-ReactDOM.render(
-  <App initialPlayers={players} />,
-  document.getElementById("root")
-);
+// Step 1: Make App a stateful component by converting it from a function to a class
+class App extends React.Component {
+  // Initialize a player state using a class property
+  state = {
+    players: [
+      {
+        name: "Tiffany",
+        id: 1,
+      },
+      {
+        name: "Treasure",
+        id: 2,
+      },
+      {
+        name: "Ashley",
+        id: 3,
+      },
+      {
+        name: "James",
+        id: 4,
+      },
+    ],
+  };
+
+  render() {
+    return (
+      <div className="scoreboard">
+        <Header title="Scoreboard" totalPlayers={this.state.players.length} />
+
+        {/* Players list */}
+        {this.state.players.map((player) => (
+          <Player name={player.name} key={player.id.toString()} />
+        ))}
+      </div>
+    );
+  }
+}
+// Step 1 end
+// Remember state is an object that stores all the data that the component itself needs and data that might get passed down to its children.
+
+// Step 2: Delete the initial players prop given to the App component in ReactDOM.render
+ReactDOM.render(<App />, document.getElementById("root"));
