@@ -45,25 +45,31 @@ class Counter extends React.Component {
     score: 0,
   };
 
-  // We are receiving an error in the console because we are referencing this.setState inside the incrementScore method, but "this" is actually undefined inside the method.
-  // In objects or classes, "this" usually refers to the parent that owns the method, so "this" should be the Counter class.
-  // However, when you create a class component that extends from React.Component, any custom methods you create are not bound to the component by default. That's why we've lost our binding to the component.
-  // Remember you need to bind your custom methods so that "this" refers to the component.
-  incrementScore() {
-    this.setState({
-      score: this.state.score + 1,
-    });
-  }
-
-  // Step 2: Add a decrementScore method
-  decrementScore = () => {
-    this.setState({
-      score: this.state.score - 1,
+  // The way setState works is it takes the object passed to it with the updated state and eventually merges it into the component's current state.
+  // A state update may be asynchronous -- sometimes updates to the DOM don't happen immediately when you call this.setState.
+  // If you have multiple setState calls inside an event handler, React will often batch or bundle the updates together into a single update.
+  // This may not always lead to the component rerendering with the new data and could cause state inconsistency.
+  // Because state maybe updated asynchronously, whenever you need to update state based on previous state, you shouldn't rely on this.state to calculate the next state.
+  // Instead of an object, setState also accepts a call back function that produces state based on the previous state in a more reliable way.
+  // The call back funtion receives the previous state as its first argument and the props at the time the update is applied as an optional second argument.
+  // Step 1:
+  incrementScore = () => {
+    this.setState((prevState) => {
+      return {
+        score: prevState.score + 1,
+      };
     });
   };
-  // Step 2 end
 
-  // Step 1
+  decrementScore = () => {
+    this.setState((prevState) => {
+      return {
+        score: this.state.score - 1,
+      };
+    });
+  };
+  // Step 1 end
+  // The call back function is guaranteed to fire after the update is applied and rendered out to the DOM.
   render() {
     return (
       <div className="counter">
@@ -77,7 +83,7 @@ class Counter extends React.Component {
         <span className="counter-score">{this.state.score}</span>
         <button
           className="counter-action increment"
-          onClick={this.incrementScore.bind(this)}
+          onClick={this.incrementScore}
         >
           {" "}
           +{" "}
@@ -86,28 +92,6 @@ class Counter extends React.Component {
     );
   }
 }
-// Other ways this problem could be solved:
-// 1:
-// Arrow function: onClick={() => this.incrementScore()}
-// With the arrow function, we don't need to bind "this" because arrow functions use a lexical "this" which means it automatically binds them to the scope in which they are defined.
-// 2:
-// The most common way to define an event handler in React is with an arrow function, so we could rewrite the increment function as follows:
-// incrementScore = () => {
-//   this.setState({
-//     score: this.state.score + 1,
-//   });
-// };
-// The function gets bound to the component instance so we would no longer need the .bind(this) in the onClick incrementScore function reference.
-// 3:
-// Another way to bind an event handler is in the class constructor:
-// constructor() {
-//   super();
-//   this.state = { score: 0 };
-//   this.incrementScore = this.incrementScore.bind(this);
-// }
-// Then pass the function to a React event like so:
-// <button onClick={ this.incrementScore }> + </button>
-// Step 1 end
 
 const App = (props) => {
   return (
