@@ -102,3 +102,12 @@ class App extends React.Component {
 
 // Step 2: Delete the initial players prop given to the App component in ReactDOM.render
 ReactDOM.render(<App />, document.getElementById("root"));
+
+// Types of State
+// Application State:
+// Data that is available to the entire application
+// The main state we typically think about
+// In this app, application state lives in the App component and all of its child components have access to it.
+// Component State:
+// State that is specific to a component and not shared outside of the component
+// The counter has state that's not shared or visible outside of the component. It's state required just for that component to do it's job -- increasing and decreasing the score.
