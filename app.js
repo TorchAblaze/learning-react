@@ -1,5 +1,3 @@
-// State is local to a component -- a component can maintain its own state, unlike props, which are read-only.
-
 const players = [
   {
     name: "Tiffany",
@@ -47,37 +45,39 @@ class Counter extends React.Component {
     score: 0,
   };
 
-  // We create a function or event handler that updates our state using React's built-in set state method.
-  // Then we give the buttons an onClick event that calls the event handler when clicked.
-  // Whenever the score state gets updated, React will re-render our component and the change will be visible in our UI.
-  // In class components, a common pattern is to create event handlers as a method on the class.
-
-  // Step 1 Part 1:
-  // It's important to remember that state is never modified directly. Example: We can't type "this.state.score += 1"
-  // The only way React allows you to update a component state is by using its built-in set state method.
-  // this.setState lets React know that state has changed and that it should re-render and make changes to the component based on the change in state.
-  // You pass setState an object that contains the part of the state you want to update and the value you want to update it to.
+  // We are receiving an error in the console because we are referencing this.setState inside the incrementScore method, but "this" is actually undefined inside the method.
+  // In objects or classes, "this" usually refers to the parent that owns the method, so "this" should be the Counter class.
+  // However, when you create a class component that extends from React.Component, any custom methods you create are not bound to the component by default. That's why we've lost our binding to the component.
+  // Remember you need to bind your custom methods so that "this" refers to the component.
   incrementScore() {
     this.setState({
       score: this.state.score + 1,
     });
   }
-  // Step 1 Part 1 end
 
-  // Now we need to instruct React to listen for the clik event on a button
-  // React events are similar to JS events except that they are written inline and named using camelCase.
+  // Step 2: Add a decrementScore method
+  decrementScore = () => {
+    this.setState({
+      score: this.state.score - 1,
+    });
+  };
+  // Step 2 end
 
-  // Step 1 Part 2
+  // Step 1
   render() {
     return (
       <div className="counter">
-        <button className="counter-action decrement"> - </button>
+        <button
+          className="counter-action decrement"
+          onClick={this.decrementScore}
+        >
+          {" "}
+          -{" "}
+        </button>
         <span className="counter-score">{this.state.score}</span>
         <button
           className="counter-action increment"
-          onClick={this.incrementScore}
-          // Notice we don't use () to call incrementScore -- we're only passing a reference to the method.
-          // Adding () will call incrementScore and make it run right when the component mounts, or gets displayed on the page, which we don't want. (We only want to call incrementScore when the button is clicked.)
+          onClick={this.incrementScore.bind(this)}
         >
           {" "}
           +{" "}
@@ -86,11 +86,28 @@ class Counter extends React.Component {
     );
   }
 }
-// Step 1 Part 2 end
-
-// An error will appear in the console: "Cannot read property 'setState' of undefined"
-// It looks like the binding to the component was lost, so we're not able to reference it with "this" from within the incrementScore method.
-// This issue is fixed in the next branch: binding
+// Other ways this problem could be solved:
+// 1:
+// Arrow function: onClick={() => this.incrementScore()}
+// With the arrow function, we don't need to bind "this" because arrow functions use a lexical "this" which means it automatically binds them to the scope in which they are defined.
+// 2:
+// The most common way to define an event handler in React is with an arrow function, so we could rewrite the increment function as follows:
+// incrementScore = () => {
+//   this.setState({
+//     score: this.state.score + 1,
+//   });
+// };
+// The function gets bound to the component instance so we would no longer need the .bind(this) in the onClick incrementScore function reference.
+// 3:
+// Another way to bind an event handler is in the class constructor:
+// constructor() {
+//   super();
+//   this.state = { score: 0 };
+//   this.incrementScore = this.incrementScore.bind(this);
+// }
+// Then pass the function to a React event like so:
+// <button onClick={ this.incrementScore }> + </button>
+// Step 1 end
 
 const App = (props) => {
   return (
