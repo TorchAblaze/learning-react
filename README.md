@@ -17,5 +17,6 @@ A very basic react web application to reinforce my react skills. Scoreboard is a
 11. binding
 12. prevState
 13. applicationState
+14. removeItems
 
 Feel free to reach out if you have any questions.
