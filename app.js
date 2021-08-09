@@ -1,5 +1,4 @@
 function Header(props) {
-  console.log(props);
   return (
     <header>
       <h1>{props.title}</h1>{" "}
@@ -8,10 +7,23 @@ function Header(props) {
   );
 }
 
+// Inside the player component, a delete button is going to trigger the change in the player state
+// To call the handleRemovePlayer() when the button is clicked, we pass onClick an anonymous function using an arrow function that returns a call to the function which is being passed in through props with props.removePlayer.
+// Then we pass the player id into the function so that it knows which player to remove onClick
+// We're passing the id as a prop, so we can access it with props.id
+// Step 3:
 const Player = (props) => {
   return (
     <div className="player">
-      <span className="player-name">{props.name}</span>
+      <span className="player-name">
+        <button
+          className="remove-player"
+          onClick={() => props.removePlayer(props.id)}
+        >
+          x
+        </button>
+        {props.name}
+      </span>
       <Counter />
     </div>
   );
@@ -30,7 +42,7 @@ class Counter extends React.Component {
 
   decrementScore = () => {
     this.setState((prevState) => ({
-      score: this.state.score - 1,
+      score: prevState.score - 1,
     }));
   };
 
@@ -57,12 +69,7 @@ class Counter extends React.Component {
   }
 }
 
-// Since the app component is responsible for rendering the player component, it's going to own and maintain the player state.
-// That state will then be passed down and available to the player component as well as all children of App via props.
-
-// Step 1: Make App a stateful component by converting it from a function to a class
 class App extends React.Component {
-  // Initialize a player state using a class property
   state = {
     players: [
       {
@@ -84,6 +91,26 @@ class App extends React.Component {
     ],
   };
 
+  // The handleRemovePlayer function takes an id parameter for the player to remove the state
+  // Step 1:
+  handleRemovePlayer = (id) => {
+    this.setState((prevState) => {
+      return {
+        players: prevState.players.filter((p) => p.id !== id),
+      };
+    });
+  };
+  // Step 1 end
+
+  // We should never modify or mutate state directly.
+  // In order to remove a player from the players array and state, we need to produce a new array that no longer contains the player object we want to remove
+  // Filter is used to remove elements from an array without affecting the original array.
+  // Like the map method, the filter method takes a callback function
+  // The first parameter of the callback represents the current item being processed in the array (in this case 'p' for player).
+  // Then we need to return all player objects and state except for the one we want to remove, using the player id.
+  // When handleRemovePlayer is invoked, we iterate through the player's array and state and filter out only the player object whose id does not equal the id passed into handleRemovePlayer.
+
+  // Step 2:
   render() {
     return (
       <div className="scoreboard">
@@ -91,23 +118,20 @@ class App extends React.Component {
 
         {/* Players list */}
         {this.state.players.map((player) => (
-          <Player name={player.name} key={player.id.toString()} />
+          <Player
+            name={player.name}
+            id={player.id}
+            key={player.id.toString()}
+            removePlayer={this.handleRemovePlayer}
+          />
         ))}
       </div>
     );
   }
 }
-// Step 1 end
-// Remember state is an object that stores all the data that the component itself needs and data that might get passed down to its children.
+// Step 2 end
+// The player component is a child of App, but it can have access to the handleRemovePlayer function written in the App class through props.
+// Props is what React uses to pass data from component to component -- you can pass functions through props, even data from state
+// We add the 'removePlayer' prop and the 'id' prop to the Player component to let the function know which player to remove
 
-// Step 2: Delete the initial players prop given to the App component in ReactDOM.render
 ReactDOM.render(<App />, document.getElementById("root"));
-
-// Types of State
-// Application State:
-// Data that is available to the entire application
-// The main state we typically think about
-// In this app, application state lives in the App component and all of its child components have access to it.
-// Component State:
-// State that is specific to a component and not shared outside of the component
-// The counter has state that's not shared or visible outside of the component. It's state required just for that component to do it's job -- increasing and decreasing the score.
